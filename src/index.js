@@ -42,7 +42,7 @@ const watch = (wd, watchman) => (watchDefinition) => {
     }
     try {
       console.log(`\n> Watch triggered at: ${wd}\n> Executing ${command}`);
-      execSync(command, { shell: true, stdio: [0, 1, 2], wd, env: process.env });
+      execSync(command, { shell: true, stdio: [0, 1, 2], cwd: wd, env: process.env });
     } catch (err) {
       console.log(`\n> Command '${command}' failed with ${err.status}`);
     }

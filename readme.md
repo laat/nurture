@@ -59,6 +59,7 @@ target is defined in `.watch` files
 ```
 
 To watch `test` run `nurture test`
+
 To watch `build` run `nurture build`
 
 ## License
