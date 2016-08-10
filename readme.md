@@ -4,7 +4,25 @@
 [npm-image]: https://img.shields.io/npm/v/nurture.svg?style=flat
 [npm-url]: https://npmjs.org/package/nurture
 
-> My awesome module
+> Define watches with with your source files
+
+Create `.watch` definition files with your source files, and watch for changes.
+A perfect fit for monorepo solutions.
+
+With a folder structure like this:
+
+```
+my-tool
+├── lerna.json
+├── package.json
+└── packages
+    ├── my-tool
+    └── my-tool-cli
+```
+
+One can setup watch-definitions for both packages `my-tool` and `my-tool-cli`
+by adding `.watch` definitions inside each package. Then in the root run
+`nurture <target>` to watch the target in both projects.
 
 ## Install
 
@@ -12,11 +30,36 @@
 $ npm install --save nurture
 ```
 
-## Usage
+## CLI Usage
 
-```js
-const nurture = require('nurture');
 ```
+Usage:
+  nurture <target>
+```
+
+target is defined in `.watch` files
+
+## Example
+
+```
+{
+  "build": [{
+    "patterns": ["src/*.js"],
+    "command": "npm run build:js -- --only",
+    "appendFiles": true
+  }, {
+    "patterns": ["src/*.js"],
+    "command": "npm run build:flow"
+  }]
+  "test": [{
+    "patterns": ["src/*.js"],
+    "command": "npm test",
+  }]
+}
+```
+
+To watch `test` run `nurture test`
+To watch `build` run `nurture build`
 
 ## License
 

@@ -1,0 +1,13 @@
+{
+  "build": [{
+    "patterns": ["src/*.js"],
+    "command": "npm run build:js -- --only",
+    "appendFiles": true
+  }, {
+    "patterns": ["src/*.js"],
+    "command": "npm run build:flow"
+  }, {
+    "patterns": ["package.json"],
+    "command": "npm install"
+  }]
+}

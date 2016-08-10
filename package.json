@@ -4,6 +4,8 @@
   "description": "A filewatcher",
   "license": "MIT",
   "repository": "laat/nurture",
+  "main": "lib/index.js",
+  "bin": "lib/cli.js",
   "author": {
     "name": "Sigurd Fosseng",
     "email": "sigurd@fosseng.net",
@@ -13,16 +15,25 @@
     "node": ">=6"
   },
   "scripts": {
-    "build": "babel -s --ignore=test.js -d lib src",
+    "build:js": "babel -s --ignore=test.js -d lib src",
+    "build:flow": "flow-copy-source src lib",
+    "build": "npm-run-all build:*",
     "lint": "eslint src -f tap",
     "prepublish": "npm run build",
-    "test": "npm run lint"
+    "test": "npm run lint",
+    "watch": "node lib/cli.js build"
   },
   "files": [
     "lib"
   ],
   "keywords": [
-    "laat"
+    "laat",
+    "watchman",
+    "file",
+    "fswatcher",
+    "watchfile",
+    "fs",
+    "watching"
   ],
   "devDependencies": {
     "babel-cli": "^6.11.4",
@@ -32,6 +43,16 @@
     "babel-preset-stage-2": "^6.13.0",
     "eslint": "^3.2.2",
     "eslint-config-airbnb-base": "^5.0.1",
-    "eslint-plugin-import": "^1.12.0"
+    "eslint-plugin-import": "^1.12.0",
+    "flow-copy-source": "^1.0.2",
+    "npm-run-all": "^2.3.0"
+  },
+  "dependencies": {
+    "docopt": "^0.6.2",
+    "escape-string-regexp": "^1.0.5",
+    "loud-rejection": "^1.6.0",
+    "minimatch": "^3.0.3",
+    "pify": "^2.3.0",
+    "sane": "^1.4.1"
   }
 }
