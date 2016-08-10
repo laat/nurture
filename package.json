@@ -10,17 +10,23 @@
     "url": "https://github.com/laat"
   },
   "engines": {
-    "node": ">=4"
+    "node": ">=6"
   },
   "scripts": {
+    "build": "babel -s --ignore=test.js -d lib src",
+    "prepublish": "npm run build",
     "test": "exit 0"
   },
   "files": [
-    "index.js"
+    "lib"
   ],
   "keywords": [
     "laat"
   ],
   "devDependencies": {
+    "babel-cli": "^6.11.4",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.11.5",
+    "babel-plugin-transform-flow-strip-types": "^6.8.0",
+    "babel-preset-stage-2": "^6.13.0"
   }
 }
