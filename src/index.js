@@ -1,2 +1,1 @@
-'use strict';
-module.exports = function foobar() {};
+export default function noop() {}

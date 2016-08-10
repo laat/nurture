@@ -14,8 +14,9 @@
   },
   "scripts": {
     "build": "babel -s --ignore=test.js -d lib src",
+    "lint": "eslint src -f tap",
     "prepublish": "npm run build",
-    "test": "exit 0"
+    "test": "npm run lint"
   },
   "files": [
     "lib"
@@ -25,8 +26,12 @@
   ],
   "devDependencies": {
     "babel-cli": "^6.11.4",
+    "babel-eslint": "^6.1.2",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.11.5",
     "babel-plugin-transform-flow-strip-types": "^6.8.0",
-    "babel-preset-stage-2": "^6.13.0"
+    "babel-preset-stage-2": "^6.13.0",
+    "eslint": "^3.2.2",
+    "eslint-config-airbnb-base": "^5.0.1",
+    "eslint-plugin-import": "^1.12.0"
   }
 }
