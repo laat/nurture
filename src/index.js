@@ -13,8 +13,13 @@ const fs = pify(nativeFS);
 async function loadWatches() {
   const watchFiles = await findFiles('.watch', process.cwd(), ['**/node_modules', '.git']);
   const files = await Promise.all(watchFiles.map(async file => {
-    const data = await fs.readFile(file);
-    return { wd: path.dirname(file), data: JSON.parse(data) };
+    try {
+      const data = await fs.readFile(file);
+      return { wd: path.dirname(file), data: JSON.parse(data) };
+    } catch (err) {
+      console.error(`Failed to read ${file}`);
+      throw err;
+    }
   }));
   if (files.length === 0) {
     throw new Error('found no .watch files');
