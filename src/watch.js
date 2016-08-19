@@ -1,6 +1,7 @@
 // @flow
 /* eslint-disable no-console */
 import sane from 'sane';
+import chalk from 'chalk';
 import { queue } from 'async';
 import { execSync } from 'child_process';
 
@@ -12,14 +13,23 @@ type WatchDefinition = {
   command: string,
   patterns: Array<string>,
   appendFiles?: boolean,
+  delete?: boolean,
+  add?: boolean,
+  change?: boolean,
 };
 
 const watch = (wd: string, watchman: boolean) => (watchDefinition: WatchDefinition) => {
   console.log(`
 > Watching ${wd}
 > Patterns: ${watchDefinition.patterns.join(', ')}
-> Command: '${watchDefinition.command}'
-`);
+> Command: '${watchDefinition.command}'`);
+  const { change = true, add = true, delete: del = false } = watchDefinition;
+  if (watchDefinition.add != null ||
+      watchDefinition.delete != null ||
+      watchDefinition.change != null) {
+    console.log(`\
+> Triggers: add ${chalk.cyan(add)} change ${chalk.cyan(change)} delete ${chalk.cyan(del)}`);
+  }
   const watcher = sane(wd, {
     glob: watchDefinition.patterns,
     watchman,
@@ -57,9 +67,15 @@ const watch = (wd: string, watchman: boolean) => (watchDefinition: WatchDefiniti
     taskQueue.push(exec);
   };
 
-  watcher.on('change', newChange);
-  watcher.on('add', newChange);
-  watcher.on('delete', newChange);
+  if (change) {
+    watcher.on('change', newChange);
+  }
+  if (add) {
+    watcher.on('add', newChange);
+  }
+  if (del) {
+    watcher.on('delete', newChange);
+  }
 };
 
 export default watch;

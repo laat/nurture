@@ -6,6 +6,10 @@
   }, {
     "patterns": ["src/**/*.js"],
     "command": "npm run build:flow"
+  }, {
+    "patterns": ["src/**/*"],
+    "command": "npm run clean && npm run build",
+    "change": false, "add": false, "delete": true
   }],
   "test": [{
     "patterns": ["src/**/*.js"],
