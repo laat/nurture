@@ -18,6 +18,8 @@ type WatchDefinition = {
   change?: boolean,
 };
 
+const check = (bool: boolean) => (bool ? chalk.green('✓') : chalk.red('✗'));
+
 const watch = (wd: string, watchman: boolean) => (watchDefinition: WatchDefinition) => {
   console.log(`
 > Watching ${wd}
@@ -28,7 +30,11 @@ const watch = (wd: string, watchman: boolean) => (watchDefinition: WatchDefiniti
       watchDefinition.delete != null ||
       watchDefinition.change != null) {
     console.log(`\
-> Triggers: add ${chalk.cyan(add)} change ${chalk.cyan(change)} delete ${chalk.cyan(del)}`);
+> Triggers: add ${check(add)} change ${check(change)} delete ${check(del)}`);
+  }
+  if (change === false && del === false && add === false) {
+    console.log(`${chalk.yellow('WARNING')}: not listening to any triggers`);
+    return;
   }
   const watcher = sane(wd, {
     glob: watchDefinition.patterns,

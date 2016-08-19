@@ -43,7 +43,7 @@ const setupWatches = async (phase: string) => {
     const phaseWatches = phaseData[phase];
     phaseWatches.forEach(watch(wd, watchman));
   });
-  console.log('> Watching for changes');
+  console.log('\n> Watching for changes');
 };
 
 export const listTargets = async () => {
