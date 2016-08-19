@@ -1,6 +1,6 @@
 declare type PhaseConfig = {
-  stdout: Array<Function>,
-  stderr: Array<Function>,
+  stdout?: Function,
+  stderr?: Function,
 }
 declare type Config = {
   [key: string]: PhaseConfig

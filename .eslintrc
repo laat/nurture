@@ -6,6 +6,7 @@
   },
   "globals": {
     "Config": false,
+    "PhaseConfig": false,
     "WatchDefinition": false,
   }
 }

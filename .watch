@@ -12,7 +12,7 @@
     "change": false, "add": false, "delete": true
   }],
   "test": [{
-    "patterns": ["src/**/*.js"],
+    "patterns": ["src/**/*.js", ".eslintrc"],
     "command": "npm run lint -s"
   }]
 }

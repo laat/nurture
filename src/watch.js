@@ -29,7 +29,7 @@ const printDefinition = (wd, {
 > Triggers: add ${check(add)} change ${check(change)} delete ${check(del)} ${warning}`);
 };
 
-async function exec(wd, command, files, appendFiles) {
+async function exec(wd, command, files, appendFiles, config) {
   if (files.length === 0) {
     return;
   }
@@ -41,13 +41,9 @@ async function exec(wd, command, files, appendFiles) {
     commandToRun = command;
   }
 
-  try {
-    console.log(`\n> Watch triggered at: ${wd}\n> ${commandToRun}`);
-    const options = { shell: true, cwd: wd, env: process.env };
-    await execCommand(commandToRun, { ...options, stdio: [0, 1, 2] });
-  } catch (err) {
-    console.log(`\n> [${wd}] '${commandToRun}': ${err.message}`);
-  }
+  console.log(`\n> Watch triggered at: ${wd}\n> ${commandToRun}`);
+  const options = { shell: true, cwd: wd, env: process.env };
+  await execCommand(commandToRun, options, config);
 }
 
 export default (watchman: boolean) => {
@@ -61,7 +57,7 @@ export default (watchman: boolean) => {
   }, 1);
   taskQueue.drain = startSpinner;
 
-  const addDefinition = (wd: string) => ({
+  const addDefinition = (wd: string, config: PhaseConfig = {}) => ({
     patterns,
     command,
     appendFiles = false,
@@ -90,7 +86,7 @@ export default (watchman: boolean) => {
         const files = Array.from(newChanges);
         newChanges.clear();
 
-        await exec(wd, command, files, appendFiles);
+        await exec(wd, command, files, appendFiles, config);
       });
     };
 
