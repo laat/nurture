@@ -6,14 +6,6 @@ import ora from 'ora';
 import { queue } from 'async';
 import execCommand from './utils/exec';
 
-type WatchDefinition = {
-  command: string,
-  patterns: Array<string>,
-  appendFiles?: boolean,
-  delete?: boolean,
-  add?: boolean,
-  change?: boolean,
-};
 
 const check = (bool?: boolean) => (bool ? chalk.green('✓') : chalk.red('✗'));
 

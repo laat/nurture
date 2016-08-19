@@ -3,5 +3,9 @@
   "parser": "babel-eslint",
   "rules": {
     "generator-star-spacing": 0,
+  },
+  "globals": {
+    "Config": false,
+    "WatchDefinition": false,
   }
 }
