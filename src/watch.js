@@ -3,7 +3,7 @@
 import sane from 'sane';
 import chalk from 'chalk';
 import { queue } from 'async';
-import { execSync } from 'child_process';
+import execCommand from './utils/exec';
 
 const taskQueue = queue((fn, cb) => {
   fn().then(cb).catch(cb);
@@ -55,7 +55,7 @@ const watch = (wd: string, watchman: boolean) => (watchDefinition: WatchDefiniti
     try {
       console.log(`\n> Watch triggered at: ${wd}\n> Executing ${command}`);
       const options = { shell: true, cwd: wd, env: process.env };
-      await execSync(command, { ...options, stdio: [0, 1, 2] });
+      await execCommand(command, { ...options, stdio: [0, 1, 2] });
     } catch (err) {
       console.log(`\n> [${wd}] '${command}': ${err.message}`);
     }
