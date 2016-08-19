@@ -4,10 +4,11 @@ import { listTargets } from '..';
 
 const ls = async () => {
   console.log(`Uasage:
-  nurture <target>
+  nurture <target>...
 
-Example:
+Examples:
   nurture build
+  nurture build test
 
   `);
   console.log(chalk.bold(chalk.yellow('Targets:')));

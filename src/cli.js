@@ -4,8 +4,8 @@ import 'loud-rejection/register';
 import setupWatches from '.';
 import ls from './commands/ls';
 
-if (process.argv[2]) {
-  setupWatches(process.argv[2]);
+if (process.argv.length > 2) {
+  setupWatches(process.argv.slice(2));
 } else {
   ls();
 }
