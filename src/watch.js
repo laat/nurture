@@ -1,12 +1,23 @@
 // @flow
 /* eslint-disable no-console */
 import sane from 'sane';
+import { queue } from 'async';
 import { execSync } from 'child_process';
 
-const watch = (wd, watchman) => (watchDefinition) => {
+const taskQueue = queue((fn, cb) => {
+  fn().then(cb).catch(cb);
+}, 1);
+
+type WatchDefinition = {
+  command: string,
+  patterns: Array<string>,
+  appendFiles?: boolean,
+};
+
+const watch = (wd: string, watchman: boolean) => (watchDefinition: WatchDefinition) => {
   console.log(`
 > Watching ${wd}
-> Patterns: ${watchDefinition.patterns}
+> Patterns: ${watchDefinition.patterns.join(', ')}
 > Command: '${watchDefinition.command}'
 `);
   const watcher = sane(wd, {
@@ -14,24 +25,42 @@ const watch = (wd, watchman) => (watchDefinition) => {
     watchman,
   });
 
-  function exec(file) {
+  let newChanges = new Set();
+
+  async function exec() {
+    const files = Array.from(newChanges);
+    newChanges = new Set();
+
+    if (files.length === 0) {
+      return;
+    }
+
     let command;
     if (watchDefinition.appendFiles) {
-      command = `${watchDefinition.command} ${file}`;
+      command = `${watchDefinition.command} ${files.join(' ')}`;
     } else {
       command = watchDefinition.command;
     }
+
     try {
       console.log(`\n> Watch triggered at: ${wd}\n> Executing ${command}`);
-      execSync(command, { shell: true, stdio: [0, 1, 2], cwd: wd, env: process.env });
+      const options = { shell: true, cwd: wd, env: process.env };
+      await execSync(command, { ...options, stdio: [0, 1, 2] });
     } catch (err) {
-      console.log(`\n> Command '${command}' failed with ${err.status}`);
+      console.log(`\n> [${wd}] '${command}': ${err.message}`);
     }
     console.log('\n> Watching for changes');
   }
-  watcher.on('change', exec);
-  watcher.on('add', exec);
-  watcher.on('delete', exec);
+
+  const newChange = file => {
+    newChanges.add(file);
+    taskQueue.push(exec);
+  };
+
+  watcher.on('change', newChange);
+  watcher.on('add', newChange);
+  watcher.on('delete', newChange);
 };
 
 export default watch;
+

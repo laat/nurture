@@ -30,8 +30,12 @@ async function loadWatches() {
   return files;
 }
 
+
 const setupWatches = async (phase: string) => {
-  const [definitions, watchman] = await Promise.all([loadWatches(), hasWatchman()]);
+  const [definitions, watchman] = await Promise.all([
+    loadWatches(),
+    hasWatchman(),
+  ]);
   definitions.forEach(({ wd, data: phaseData }) => {
     if (!phaseData[phase]) {
       return;
@@ -44,7 +48,6 @@ const setupWatches = async (phase: string) => {
 
 export const listTargets = async () => {
   const definitions = await loadWatches();
-
   const targets = {};
   definitions.forEach(def => {
     Object.keys(def.data).forEach(target => {
