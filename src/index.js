@@ -2,7 +2,6 @@
 /* eslint-disable no-console */
 import nativeFS from 'fs';
 import path from 'path';
-import { execSync } from 'child_process';
 import pify from 'pify';
 import watch from './watch';
 import findFiles from './utils/find-files';
@@ -11,7 +10,11 @@ import hasWatchman from './utils/has-watchman';
 const fs = pify(nativeFS);
 
 async function loadWatches() {
-  const watchFiles = await findFiles('.watch', process.cwd(), ['**/node_modules', '.git']);
+  const watchFiles = await findFiles(
+      '.watch',
+      process.cwd(),
+      ['**/node_modules', '.git']
+  );
   const files = await Promise.all(watchFiles.map(async file => {
     try {
       const data = await fs.readFile(file);
@@ -39,4 +42,16 @@ const setupWatches = async (phase: string) => {
   console.log('> Watching for changes');
 };
 
+export const listTargets = async () => {
+  const definitions = await loadWatches();
+
+  const targets = {};
+  definitions.forEach(def => {
+    Object.keys(def.data).forEach(target => {
+      targets[target] = (targets[target] || []);
+      targets[target].push({ wd: def.wd, data: def.data[target] });
+    });
+  });
+  return targets;
+};
 export default setupWatches;

@@ -1,13 +1,11 @@
 #!/usr/bin/env node
 /* eslint-disable global-require, import/newline-after-import */
 import 'loud-rejection/register';
-import { docopt } from 'docopt';
 import setupWatches from '.';
+import ls from './commands/ls';
 
-const doc = `
-Usage:
-  nurture <target>
-`;
-const args = docopt(doc, { version: require('../package.json').version });
-
-setupWatches(args['<target>']);
+if (process.argv[2]) {
+  setupWatches(process.argv[2]);
+} else {
+  ls();
+}

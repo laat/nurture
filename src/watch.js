@@ -1,3 +1,5 @@
+// @flow
+/* eslint-disable no-console */
 import sane from 'sane';
 import { execSync } from 'child_process';
 
