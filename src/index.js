@@ -3,7 +3,7 @@
 import nativeFS from 'fs';
 import path from 'path';
 import pify from 'pify';
-import watch from './watch';
+import createWatcher from './watch';
 import findFiles from './utils/find-files';
 import hasWatchman from './utils/has-watchman';
 
@@ -36,14 +36,15 @@ const setupWatches = async (phase: string) => {
     loadWatches(),
     hasWatchman(),
   ]);
+  const watcher = createWatcher(watchman);
   definitions.forEach(({ wd, data: phaseData }) => {
     if (!phaseData[phase]) {
       return;
     }
     const phaseWatches = phaseData[phase];
-    phaseWatches.forEach(watch(wd, watchman));
+    phaseWatches.forEach(watcher.add(wd));
   });
-  console.log('\n> Watching for changes');
+  watcher.start();
 };
 
 export const listTargets = async () => {

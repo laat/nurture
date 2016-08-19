@@ -55,6 +55,7 @@
     "escape-string-regexp": "^1.0.5",
     "loud-rejection": "^1.6.0",
     "minimatch": "^3.0.3",
+    "ora": "^0.3.0",
     "pify": "^2.3.0",
     "sane": "^1.4.1"
   }
