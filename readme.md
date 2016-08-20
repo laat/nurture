@@ -6,8 +6,12 @@
 
 > Define watches with with your source files
 
+<img src="screenshot.gif">
+
 Create `.watch` definition files with your source files, and watch for changes.
 A perfect fit for monorepo solutions.
+
+## Motivation
 
 With a folder structure like this:
 
