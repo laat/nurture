@@ -11,8 +11,9 @@
     "command": "npm run clean && npm run build",
     "change": false, "add": false, "delete": true
   }],
-  "test": [{
+  "lint": [{
     "patterns": ["src/**/*.js", ".eslintrc"],
-    "command": "npm run lint -s"
+    "command": "npm run eslint --",
+    "appendFiles": true
   }]
 }

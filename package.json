@@ -20,7 +20,8 @@
     "build:js": "babel -s --ignore=test.js -d lib src",
     "build:flow": "flow-copy-source src lib",
     "build": "npm-run-all build:*",
-    "lint": "eslint src -f tap",
+    "eslint": "eslint -f tap",
+    "lint": "npm run eslint -- .",
     "prepublish": "npm run build",
     "test": "npm run lint",
     "watch": "node lib/cli.js build"
