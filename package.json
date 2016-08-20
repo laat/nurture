@@ -50,7 +50,6 @@
     "npm-run-all": "^2.3.0",
     "rimraf": "^2.5.4",
     "source-map-support": "^0.4.2",
-    "tap-diff": "^0.1.1",
     "tap-notify": "^1.0.0"
   },
   "dependencies": {
