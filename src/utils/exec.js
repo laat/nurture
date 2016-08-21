@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 import { spawn } from 'child_process';
+import chalk from 'chalk';
 
 export default function exec(command: string, options: Object, config: PhaseConfig) {
   return new Promise((resolve, reject) => {
@@ -17,7 +18,10 @@ export default function exec(command: string, options: Object, config: PhaseConf
     }
     child.on('close', (code) => {
       if (code !== 0) {
-        console.log(`\n> [${options.cwd}] '${command}': exited with code ${code}`);
+        console.log(`
+> ${chalk.red('ERROR')} [${options.cwd}]
+> '${command}': exited with code ${code}
+`);
       }
       resolve();
     });
