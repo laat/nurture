@@ -53,7 +53,10 @@ export default (watchman: boolean) => {
   };
 
   const taskQueue = queue((fn, cb) => {
-    fn().then(cb).catch(cb);
+    fn().then(cb).catch((err) => {
+      console.error('Task failed', err);
+      cb();
+    });
   }, 1);
   taskQueue.drain = startSpinner;
 
