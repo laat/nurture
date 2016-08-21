@@ -10,18 +10,28 @@ export default function exec(command: string, options: Object, config: PhaseConf
       config.stderr ? 'pipe' : 'inherit',
     ];
     const child = spawn(command, { ...options, stdio });
+    let stdout;
     if (config.stdout) {
-      child.stdout.pipe(config.stdout()).pipe(process.stdout);
+      stdout = config.stdout();
+      child.stdout.pipe(stdout).pipe(process.stdout);
     }
+    let stderr;
     if (config.stderr) {
-      child.stderr.pipe(config.stderr()).pipe(process.stderr);
+      stderr = config.stderr();
+      child.stderr.pipe(stderr).pipe(process.stderr);
     }
-    child.on('close', (code) => {
+    child.on('exit', (code) => {
       if (code !== 0) {
         console.log(`
 > ${chalk.red('ERROR')} [${options.cwd}]
 > '${command}': exited with code ${code}
 `);
+      }
+      if (stdout) {
+        stdout.unpipe();
+      }
+      if (stderr) {
+        stderr.unpipe();
       }
       resolve();
     });
