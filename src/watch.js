@@ -41,7 +41,7 @@ async function exec(wd, command, files, appendFiles, config) {
     commandToRun = command;
   }
 
-  console.log(`\n> Watch triggered at: ${wd}\n> ${commandToRun}`);
+  console.log(`\n> ${chalk.green('Watch triggered at')}: ${wd}\n> ${commandToRun}`);
   const options = { shell: true, cwd: wd, env: process.env };
   await execCommand(commandToRun, options, config);
 }
