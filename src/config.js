@@ -1,6 +1,23 @@
 import findUp from 'find-up';
 import multipipe from 'multipipe';
 
+export type PhaseConfig = {
+  stdout?: Function,
+  stderr?: Function,
+}
+export type Config = {
+  [key: string]: PhaseConfig
+};
+
+export type WatchDefinition = {
+  command: string,
+  patterns: Array<string>,
+  appendFiles?: boolean,
+  delete?: boolean,
+  add?: boolean,
+  change?: boolean,
+};
+
 const getConfig = async (): Config => {
   const configFile = await findUp('.nurture.js');
   if (!configFile) {
