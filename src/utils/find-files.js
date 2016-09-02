@@ -1,3 +1,4 @@
+// @flow
 import pify from 'pify';
 import nativeFs from 'fs';
 import path from 'path';
@@ -15,7 +16,7 @@ const isIgnored = (workdir, patterns) => {
 async function findFiles(
     filename: string,
     workdir: string,
-    ignore: Array<String> = []
+    ignore: Array<string> = []
 ): Promise<Array<string>> {
   const files = [];
   const shouldSkip = isIgnored(workdir, ignore);

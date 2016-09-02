@@ -1,3 +1,4 @@
+// @flow
 /* eslint-disable no-console */
 import nativeFS from 'fs';
 import path from 'path';

@@ -3,6 +3,7 @@
   "parser": "babel-eslint",
   "rules": {
     "generator-star-spacing": 0,
+    "no-duplicate-imports": 0,
   },
   "globals": {
     "Config": false,

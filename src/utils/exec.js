@@ -1,6 +1,8 @@
+// @flow
 /* eslint-disable no-console */
 import { spawn } from 'child_process';
 import chalk from 'chalk';
+import type { PhaseConfig } from '../config';
 
 export default function exec(command: string, options: Object, config: PhaseConfig) {
   return new Promise((resolve, reject) => {

@@ -1,3 +1,4 @@
+// @flow
 import findUp from 'find-up';
 import multipipe from 'multipipe';
 
@@ -23,6 +24,7 @@ const getConfig = async (): Config => {
   if (!configFile) {
     return {};
   }
+  // $FlowIgnore
   const config = require(configFile); // eslint-disable-line
 
   Object.keys(config)

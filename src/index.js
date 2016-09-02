@@ -3,6 +3,7 @@
 import createWatcher from './watch';
 import loadWatches from './load-watches';
 import hasWatchman from './utils/has-watchman';
+import type { WatchDefinition } from './config';
 import getConfig from './config';
 
 const setupPhaseWatch = (definitions, watcher, config) => phase => {
@@ -35,7 +36,10 @@ const setupWatches = async (phase: string|Array<string>) => {
   watcher.start();
 };
 
-export const listTargets = async () => {
+type Targets = {
+  [target: string]: Array<{wd: string, data: Array<WatchDefinition> }>
+};
+export const listTargets = async (): Promise<Targets> => {
   const definitions = await loadWatches();
   const targets = {};
   definitions.forEach(def => {
