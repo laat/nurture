@@ -7,7 +7,20 @@ import findFiles from './utils/find-files';
 
 const fs = pify(nativeFS);
 
-async function loadWatches() {
+export type WatchDefinition = {
+  command: string,
+  patterns: Array<string>,
+  appendFiles?: boolean,
+  delete?: boolean,
+  add?: boolean,
+  change?: boolean,
+};
+
+export type WatchFile = {
+  [target: string]: Array<WatchDefinition>
+};
+
+async function loadWatches(): Promise<Array<{wd: string, data:WatchFile}>> {
   const watchFiles = await findFiles(
       '.watch',
       process.cwd(),

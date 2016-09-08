@@ -15,7 +15,6 @@
     "node": ">=6"
   },
   "scripts": {
-    "fail": "exit 1",
     "clean": "rimraf lib",
     "build:js": "babel -s --ignore=test.js -d lib src",
     "build:flow": "flow-copy-source src lib",

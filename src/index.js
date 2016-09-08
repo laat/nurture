@@ -3,7 +3,7 @@
 import createWatcher from './watch';
 import loadWatches from './load-watches';
 import hasWatchman from './utils/has-watchman';
-import type { WatchDefinition } from './config';
+import type { WatchDefinition } from './load-watches';
 import getConfig from './config';
 
 const setupPhaseWatch = (definitions, watcher, config) => phase => {

@@ -4,7 +4,8 @@ import sane from 'sane';
 import chalk from 'chalk';
 import ora from 'ora';
 import { queue } from 'async';
-import type { WatchDefinition, PhaseConfig } from './config';
+import type { PhaseConfig } from './config';
+import type { WatchDefinition } from './load-watches';
 import execCommand from './utils/exec';
 
 
