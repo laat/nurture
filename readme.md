@@ -34,6 +34,8 @@ by adding `.watch` definitions inside each package. Then in the root run
 $ npm install --save nurture
 ```
 
+Nurture uses [sane](https://www.npmjs.com/package/sane) behind the scenes so for most reliable usage on linux and OS X install [watchman](https://facebook.github.io/watchman/)
+
 ## CLI Usage
 
 ```
