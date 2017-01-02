@@ -31,14 +31,19 @@ const printDefinition = (wd, {
 > Triggers: add ${check(add)} change ${check(change)} delete ${check(del)} ${warning}`);
 };
 
-async function exec(wd, command, files, appendFiles, config) {
-  if (files.length === 0) {
+type FilesConfig = {
+  files: Array<string>,
+  appendFiles: boolean,
+  appendSeparator: string,
+};
+async function exec(wd, command, config, filesConfig: FilesConfig) {
+  if (filesConfig.files.length === 0) {
     return;
   }
 
   let commandToRun;
-  if (appendFiles) {
-    commandToRun = `${command} ${files.join(' ')}`;
+  if (filesConfig.appendFiles) {
+    commandToRun = `${command} ${filesConfig.files.join(filesConfig.appendSeparator)}`;
   } else {
     commandToRun = command;
   }
@@ -66,6 +71,7 @@ export default (watchman: boolean) => {
     patterns,
     command,
     appendFiles = false,
+    appendSeparator = ' ',
     add = true,
     delete: del = false,
     change = true,
@@ -74,6 +80,7 @@ export default (watchman: boolean) => {
       patterns,
       command,
       appendFiles,
+      appendSeparator,
       add,
       delete: del,
       change,
@@ -90,8 +97,13 @@ export default (watchman: boolean) => {
         spinner.stop();
         const files = Array.from(newChanges);
         newChanges.clear();
+        const filesConfig = {
+          files,
+          appendFiles,
+          appendSeparator,
+        };
 
-        await exec(wd, command, files, appendFiles, config);
+        await exec(wd, command, config, filesConfig);
       });
     };
 

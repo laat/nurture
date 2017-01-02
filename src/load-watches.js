@@ -11,6 +11,7 @@ export type WatchDefinition = {
   command: string,
   patterns: Array<string>,
   appendFiles?: boolean,
+  appendSeparator?: string,
   delete?: boolean,
   add?: boolean,
   change?: boolean,

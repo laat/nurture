@@ -52,7 +52,8 @@ target is defined in `.watch` files
   "build": [{
     "patterns": ["src/*.js"],
     "command": "npm run build:js -- --only",
-    "appendFiles": true
+    "appendFiles": true,
+    "appendSeparator": ","
   }, {
     "patterns": ["src/*.js"],
     "command": "npm run build:flow"
