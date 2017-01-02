@@ -84,7 +84,7 @@ export default (watchman: boolean) => {
     const watcher = sane(wd, { glob: patterns, watchman });
     const newChanges = new Set();
 
-    const newChange = file => {
+    const newChange = (file) => {
       newChanges.add(file);
       taskQueue.push(async () => {
         spinner.stop();

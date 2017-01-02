@@ -20,7 +20,7 @@ const getConfig = async (): Config => {
 
   Object.keys(config)
   .map(phase => config[phase])
-  .forEach(phase => {
+  .forEach((phase) => {
     if (phase.stdout && phase.stdout.length > 1) {
       const pipes = phase.stdout;
       phase.stdout = () => multipipe(...pipes.map(f => f())); // eslint-disable-line

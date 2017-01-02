@@ -6,7 +6,7 @@ import hasWatchman from './utils/has-watchman';
 import type { WatchDefinition } from './load-watches';
 import getConfig from './config';
 
-const setupPhaseWatch = (definitions, watcher, config) => phase => {
+const setupPhaseWatch = (definitions, watcher, config) => (phase) => {
   definitions.forEach(({ wd, data: phaseData }) => {
     if (!phaseData[phase]) {
       return;
@@ -42,8 +42,8 @@ type Targets = {
 export const listTargets = async (): Promise<Targets> => {
   const definitions = await loadWatches();
   const targets = {};
-  definitions.forEach(def => {
-    Object.keys(def.data).forEach(target => {
+  definitions.forEach((def) => {
+    Object.keys(def.data).forEach((target) => {
       targets[target] = (targets[target] || []);
       targets[target].push({ wd: def.wd, data: def.data[target] });
     });

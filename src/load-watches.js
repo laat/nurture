@@ -24,9 +24,9 @@ async function loadWatches(): Promise<Array<{wd: string, data:WatchFile}>> {
   const watchFiles = await findFiles(
       '.watch',
       process.cwd(),
-      ['**/node_modules', '.git']
+      ['**/node_modules', '.git'],
   );
-  const files = await Promise.all(watchFiles.map(async file => {
+  const files = await Promise.all(watchFiles.map(async (file) => {
     try {
       const data = await fs.readFile(file);
       return { wd: path.dirname(file), data: JSON.parse(data) };

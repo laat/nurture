@@ -14,9 +14,9 @@ const isIgnored = (workdir, patterns) => {
 };
 
 async function findFiles(
-    filename: string,
-    workdir: string,
-    ignore: Array<string> = []
+  filename: string,
+  workdir: string,
+  ignore: Array<string> = [],
 ): Promise<Array<string>> {
   const files = [];
   const shouldSkip = isIgnored(workdir, ignore);
@@ -29,11 +29,11 @@ async function findFiles(
         const visit = !await shouldSkip(dir);
         if (visit) {
           const dirs = await fs.readdir(dir);
-          await Promise.all(dirs.map(async child => await walk(path.join(dir, child))));
+          await Promise.all(dirs.map(child => walk(path.join(dir, child))));
         }
       }
     } catch (e) {
-      return;
+      // TODO: What now?
     }
   }
   await walk(workdir);
