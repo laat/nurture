@@ -9,6 +9,7 @@ import type { PhaseConfig } from './config';
 import type { WatchDefinition } from './load-watches';
 import execCommand from './utils/exec';
 
+const SETTLE_DEFAULT = 200;
 
 const check = (bool?: boolean) => (bool ? chalk.green('✓') : chalk.red('✗'));
 
@@ -18,6 +19,9 @@ const printDefinition = (wd, {
   delete: del,
   command,
   patterns,
+  settle,
+  appendFiles,
+  appendSeparator,
 }: WatchDefinition) => {
   let warning = '';
   if (change === false && del === false && add === false) {
@@ -25,11 +29,24 @@ const printDefinition = (wd, {
     return;
   }
 
+  let optionsText = '';
+  if (settle !== SETTLE_DEFAULT) {
+    optionsText += ` settle ${settle}`;
+  }
+
+  if (appendFiles === true) {
+    optionsText += ` appendFiles ${check(appendFiles)} appendSeparator "${appendSeparator}"`;
+  }
+
+  if (optionsText) {
+    optionsText = `\n> Options:${optionsText}`;
+  }
+
   console.log(`
 > Watching ${wd}
 > Patterns: ${patterns.join(', ')}
 > Command: '${command}'
-> Triggers: add ${check(add)} change ${check(change)} delete ${check(del)} ${warning}`);
+> Triggers: add ${check(add)} change ${check(change)} delete ${check(del)} ${optionsText} ${warning}`);
 };
 
 type FilesConfig = {
@@ -72,11 +89,11 @@ export default (watchman: boolean) => {
     patterns,
     command,
     appendFiles = false,
-    settle = 200,
     appendSeparator = ' ',
     add = true,
     delete: del = false,
     change = true,
+    settle = SETTLE_DEFAULT,
   }: WatchDefinition) => {
     const watchDefinition = {
       patterns,
