@@ -60,6 +60,7 @@ target is defined in `.watch` files
   }]
   "test": [{
     "patterns": ["src/*.js"],
+    "settle": 500,
     "command": "npm test",
   }]
 }

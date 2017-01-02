@@ -10,6 +10,7 @@ const fs = pify(nativeFS);
 export type WatchDefinition = {
   command: string,
   patterns: Array<string>,
+  settle?: number,
   appendFiles?: boolean,
   appendSeparator?: string,
   delete?: boolean,

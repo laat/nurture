@@ -2,6 +2,7 @@
   "build": [{
     "patterns": ["src/**/*.js"],
     "command": "npm run build:js -- --only",
+    "settle": 500,
     "appendFiles": true,
     "appendSeparator": ","
   }, {

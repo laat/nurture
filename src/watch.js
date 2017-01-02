@@ -1,6 +1,7 @@
 // @flow
 /* eslint-disable no-console */
 import sane from 'sane';
+import debounce from 'debounce';
 import chalk from 'chalk';
 import ora from 'ora';
 import { queue } from 'async';
@@ -71,6 +72,7 @@ export default (watchman: boolean) => {
     patterns,
     command,
     appendFiles = false,
+    settle = 200,
     appendSeparator = ' ',
     add = true,
     delete: del = false,
@@ -79,6 +81,7 @@ export default (watchman: boolean) => {
     const watchDefinition = {
       patterns,
       command,
+      settle,
       appendFiles,
       appendSeparator,
       add,
@@ -91,8 +94,7 @@ export default (watchman: boolean) => {
     const watcher = sane(wd, { glob: patterns, watchman });
     const newChanges = new Set();
 
-    const newChange = (file) => {
-      newChanges.add(file);
+    const processChanges = debounce(() => {
       taskQueue.push(async () => {
         spinner.stop();
         const files = Array.from(newChanges);
@@ -105,6 +107,11 @@ export default (watchman: boolean) => {
 
         await exec(wd, command, config, filesConfig);
       });
+    }, settle);
+
+    const newChange = (file) => {
+      newChanges.add(file);
+      processChanges();
     };
 
     if (change) {
