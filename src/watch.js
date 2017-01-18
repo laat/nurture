@@ -30,12 +30,13 @@ const printDefinition = (wd, {
   }
 
   let optionsText = '';
-  if (settle !== SETTLE_DEFAULT) {
+  if (settle !== SETTLE_DEFAULT && settle != null) {
     optionsText += ` settle ${settle}`;
   }
 
   if (appendFiles === true) {
-    optionsText += ` appendFiles ${check(appendFiles)} appendSeparator "${appendSeparator}"`;
+    const separator = appendSeparator || '';
+    optionsText += ` appendFiles ${check(appendFiles)} appendSeparator "${separator}"`;
   }
 
   if (optionsText) {
