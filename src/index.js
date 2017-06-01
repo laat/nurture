@@ -44,7 +44,7 @@ const setupWatches = async (phase: string|Array<string>) => {
     hasWatchman(),
     getConfig(),
   ]);
-  const watcher = createWatcher(watchman, config);
+  const watcher = createWatcher(watchman);
   const setup = setupPhaseWatch(definitions, watcher, config);
 
   phases.forEach(setup);
