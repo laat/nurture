@@ -1,13 +1,13 @@
 {
-  "extends": "airbnb-base",
+  "extends": ["airbnb-base", "prettier", "prettier/flowtype"],
   "parser": "babel-eslint",
   "rules": {
     "generator-star-spacing": 0,
-    "no-duplicate-imports": 0,
+    "no-duplicate-imports": 0
   },
   "globals": {
     "Config": false,
     "PhaseConfig": false,
-    "WatchDefinition": false,
+    "WatchDefinition": false
   }
 }

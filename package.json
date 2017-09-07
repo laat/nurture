@@ -24,11 +24,13 @@
     "prepublish": "npm run build",
     "test": "npm run lint",
     "watch": "node lib/cli.js build",
-    "flow": "flow check"
+    "flow": "flow check",
+    "precommit": "lint-staged"
   },
-  "files": [
-    "lib"
-  ],
+  "lint-staged": {
+    "*.{js,json,css}": ["prettier --write", "git add"]
+  },
+  "files": ["lib"],
   "keywords": [
     "laat",
     "watchman",
@@ -46,10 +48,14 @@
     "babel-preset-stage-2": "^6.13.0",
     "eslint": "^4.6.1",
     "eslint-config-airbnb-base": "^12.0.0",
+    "eslint-config-prettier": "^2.4.0",
     "eslint-plugin-import": "^2.7.0",
     "flow-bin": "^0.54.1",
     "flow-copy-source": "^1.0.2",
+    "husky": "^0.14.3",
+    "lint-staged": "^4.1.3",
     "npm-run-all": "^4.0.0",
+    "prettier": "^1.6.1",
     "rimraf": "^2.5.4",
     "source-map-support": "^0.4.2",
     "tap-notify": "^1.0.0"

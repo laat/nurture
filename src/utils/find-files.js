@@ -1,22 +1,22 @@
 // @flow
-import pify from 'pify';
-import nativeFs from 'fs';
-import path from 'path';
-import minimatch from 'minimatch';
-import reEscape from 'escape-string-regexp';
+import pify from "pify";
+import nativeFs from "fs";
+import path from "path";
+import minimatch from "minimatch";
+import reEscape from "escape-string-regexp";
 
 const fs = pify(nativeFs);
 
 const isIgnored = (workdir, patterns) => {
   const re = new RegExp(`^${reEscape(workdir)}`);
   return async file =>
-    (await patterns).some(pattern => minimatch(file.replace(re, ''), pattern));
+    (await patterns).some(pattern => minimatch(file.replace(re, ""), pattern));
 };
 
 async function findFiles(
   filename: string,
   workdir: string,
-  ignore: Array<string> = [],
+  ignore: Array<string> = []
 ): Promise<Array<string>> {
   const files = [];
   const shouldSkip = isIgnored(workdir, ignore);

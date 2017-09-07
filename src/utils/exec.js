@@ -1,15 +1,19 @@
 // @flow
 /* eslint-disable no-console */
-import { spawn } from 'child_process';
-import chalk from 'chalk';
-import type { PhaseConfig } from '../config';
+import { spawn } from "child_process";
+import chalk from "chalk";
+import type { PhaseConfig } from "../config";
 
-export default function exec(command: string, options: Object, config: PhaseConfig) {
+export default function exec(
+  command: string,
+  options: Object,
+  config: PhaseConfig
+): Promise<void> {
   return new Promise((resolve, reject) => {
     const stdio = [
-      'inherit',
-      config.stdout ? 'pipe' : 'inherit',
-      config.stderr ? 'pipe' : 'inherit',
+      "inherit",
+      config.stdout ? "pipe" : "inherit",
+      config.stderr ? "pipe" : "inherit"
     ];
     const child = spawn(command, { ...options, stdio });
     let stdout;
@@ -22,10 +26,10 @@ export default function exec(command: string, options: Object, config: PhaseConf
       stderr = config.stderr();
       child.stderr.pipe(stderr).pipe(process.stderr);
     }
-    child.on('exit', (code) => {
+    child.on("exit", code => {
       if (code !== 0) {
         console.log(`
-> ${chalk.red('ERROR')} [${options.cwd}]
+> ${chalk.red("ERROR")} [${options.cwd}]
 > '${command}': exited with code ${code}
 `);
       }
@@ -37,6 +41,6 @@ export default function exec(command: string, options: Object, config: PhaseConf
       }
       resolve();
     });
-    child.on('error', reject);
+    child.on("error", reject);
   });
 }
