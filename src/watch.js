@@ -22,7 +22,8 @@ const printDefinition = (wd, {
   settle,
   appendFiles,
   appendSeparator,
-}: WatchDefinition) => {
+}:
+WatchDefinition) => {
   let warning = '';
   if (change === false && del === false && add === false) {
     warning = `\n${chalk.yellow('WARNING')}: not listening to any triggers`;
@@ -95,7 +96,8 @@ export default (watchman: boolean) => {
     delete: del = false,
     change = true,
     settle = SETTLE_DEFAULT,
-  }: WatchDefinition) => {
+  }:
+WatchDefinition) => {
     const watchDefinition = {
       patterns,
       command,
