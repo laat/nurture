@@ -1,6 +1,7 @@
 // @flow
 import findUp from "find-up";
 import multipipe from "multipipe";
+import fs from "fs";
 
 export type PhaseConfig = {
   stdout?: Function,
@@ -15,8 +16,7 @@ const getConfig = async (): Config => {
   if (!configFile) {
     return {};
   }
-  // $FlowIgnore
-  const config = require(configFile); // eslint-disable-line
+  const config = JSON.parse(fs.readFileSync(configFile, "utf8"));
 
   Object.keys(config)
     .map(phase => config[phase])
