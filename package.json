@@ -24,8 +24,7 @@
     "prepublish": "npm run build",
     "test": "npm run lint",
     "watch": "node lib/cli.js build",
-    "flow": "flow check",
-    "precommit": "lint-staged"
+    "flow": "flow check"
   },
   "lint-staged": {
     "*.{js,json,css}": [
@@ -77,5 +76,10 @@
     "ora": "^3.0.0",
     "pify": "^4.0.1",
     "sane": "^4.0.2"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
   }
 }
