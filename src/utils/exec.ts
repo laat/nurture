@@ -1,20 +1,25 @@
-import { spawn } from "child_process";
+import { spawn, SpawnOptionsWithoutStdio } from "child_process";
 import chalk from "chalk";
+import { StdIoConfig } from "../config";
 
-export default function exec(command, options, config) {
-  return new Promise((resolve, reject) => {
-    const stdio = [
+export default function exec(
+  command: string,
+  options: SpawnOptionsWithoutStdio,
+  config: StdIoConfig
+) {
+  return new Promise<void>((resolve, reject) => {
+    const stdio: any[] = [
       "inherit",
       config.stdout ? "pipe" : "inherit",
       config.stderr ? "pipe" : "inherit",
     ];
     const child = spawn(command, { ...options, stdio });
-    let stdout;
+    let stdout: NodeJS.ReadWriteStream;
     if (config.stdout) {
       stdout = config.stdout();
       child.stdout.pipe(stdout).pipe(process.stdout);
     }
-    let stderr;
+    let stderr: NodeJS.ReadWriteStream;
     if (config.stderr) {
       stderr = config.stderr();
       child.stderr.pipe(stderr).pipe(process.stderr);

@@ -5,13 +5,15 @@ import ora from "ora";
 import { queue } from "async";
 
 import execCommand from "./utils/exec.js";
+import { WatchDefinition } from "./load-watches.js";
+import { StdIoConfig } from "./config.js";
 
 const SETTLE_DEFAULT = 200;
 
-const check = (bool) => (bool ? chalk.green("✓") : chalk.red("✗"));
+const check = (bool?: boolean) => (bool ? chalk.green("✓") : chalk.red("✗"));
 
 const printDefinition = (
-  wd,
+  wd: string,
   {
     change,
     add,
@@ -21,7 +23,7 @@ const printDefinition = (
     settle,
     appendFiles,
     appendSeparator,
-  }
+  }: WatchDefinition
 ) => {
   let warning = "";
   if (change === false && del === false && add === false) {
@@ -54,7 +56,17 @@ const printDefinition = (
   )} ${optionsText} ${warning}`);
 };
 
-async function exec(wd, command, config, filesConfig) {
+type FilesConfig = {
+  files: Array<string>;
+  appendFiles: boolean;
+  appendSeparator: string;
+};
+async function exec(
+  wd: string,
+  command: string,
+  config: StdIoConfig,
+  filesConfig: FilesConfig
+) {
   if (filesConfig.files.length === 0) {
     return;
   }
@@ -75,24 +87,29 @@ async function exec(wd, command, config, filesConfig) {
   await execCommand(commandToRun, options, config);
 }
 
-export default (watchman) => {
+export type Watcher = {
+  add: (wd: string, config?: StdIoConfig) => (watch: WatchDefinition) => void;
+  start: () => void;
+};
+export default (watchman: boolean | undefined): Watcher => {
   const spinner = ora("Watching for changes");
   const startSpinner = () => {
     spinner.start();
   };
 
-  const taskQueue = queue((fn, cb) => {
-    fn()
-      .then(cb)
-      .catch((err) => {
-        console.error("Task failed", err);
-        cb();
-      });
+  const taskQueue = queue<() => Promise<void>>(async (fn, cb) => {
+    try {
+      await fn();
+    } catch (err) {
+      console.error("Task failed", err);
+      return cb(err as any);
+    }
+    cb();
   }, 1);
   taskQueue.drain(startSpinner);
 
   const addDefinition =
-    (wd, config = {}) =>
+    (wd: string, config: StdIoConfig = {}) =>
     ({
       patterns,
       command,
@@ -102,7 +119,7 @@ export default (watchman) => {
       delete: del = false,
       change = true,
       settle = SETTLE_DEFAULT,
-    }) => {
+    }: WatchDefinition) => {
       const watchDefinition = {
         patterns,
         command,
@@ -117,7 +134,7 @@ export default (watchman) => {
       printDefinition(wd, watchDefinition);
 
       const watcher = sane(wd, { glob: patterns, watchman });
-      const newChanges = new Set();
+      const newChanges = new Set<string>();
 
       const processChanges = debounce(() => {
         taskQueue.push(async () => {
@@ -134,7 +151,7 @@ export default (watchman) => {
         });
       }, settle);
 
-      const newChange = (file) => {
+      const newChange = (file: string) => {
         newChanges.add(file);
         processChanges();
       };

@@ -1,12 +1,14 @@
-//
 import chalk from "chalk";
-import createWatcher from "./watch.js";
-import loadWatches from "./load-watches.js";
+import createWatcher, { Watcher } from "./watch.js";
+import loadWatches, { WatchDefinition, WatchDir } from "./load-watches.js";
 import hasWatchman from "./utils/has-watchman.js";
-import getConfig from "./config.js";
+import getConfig, { WatchConfig } from "./config.js";
 
-const getTargets = (definitions) => {
-  const targets = {};
+type Targets = {
+  [target: string]: Array<{ wd: string; data: Array<WatchDefinition> }>;
+};
+const getTargets = (definitions: WatchDir[]): Targets => {
+  const targets: Targets = {};
   definitions.forEach((def) => {
     Object.keys(def.data).forEach((target) => {
       targets[target] = targets[target] || [];
@@ -16,23 +18,20 @@ const getTargets = (definitions) => {
   return targets;
 };
 
-const setupPhaseWatch = (definitions, watcher, config) => (phase) => {
-  definitions.forEach(({ wd, data: phaseData }) => {
-    if (!phaseData[phase]) {
-      return;
-    }
-    const phaseWatches = phaseData[phase];
-    phaseWatches.forEach(watcher.add(wd, config[phase]));
-  });
-};
+const setupPhaseWatch =
+  (definitions: WatchDir[], watcher: Watcher, config: WatchConfig) =>
+  (phase: string) => {
+    definitions.forEach(({ wd, data: phaseData }) => {
+      if (!phaseData[phase]) {
+        return;
+      }
+      const phaseWatches = phaseData[phase];
+      phaseWatches.forEach(watcher.add(wd, config[phase]));
+    });
+  };
 
-const setupWatches = async (phase) => {
-  let phases;
-  if (typeof phase === "string") {
-    phases = [phase];
-  } else {
-    phases = phase;
-  }
+const setupWatches = async (phase: string | string[]) => {
+  const phases: string[] = typeof phase === "string" ? [phase] : phase;
   const [definitions, watchman, config] = await Promise.all([
     loadWatches(),
     hasWatchman(),

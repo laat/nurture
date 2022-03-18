@@ -1,7 +1,7 @@
 {
   "build": [
     {
-      "patterns": ["src/**/*.js"],
+      "patterns": ["src/**/*.{js,ts}"],
       "command": "npm run build:ts",
       "settle": 500
       // "appendFiles": true,
@@ -17,7 +17,7 @@
   ],
   "lint": [
     {
-      "patterns": ["src/**/*.js", ".eslintrc"],
+      "patterns": ["src/**/*.ts", ".eslintrc"],
       "command": "npm run eslint --",
       "appendFiles": true
     }

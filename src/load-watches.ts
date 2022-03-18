@@ -1,12 +1,29 @@
-import nativeFS from "fs";
+import fs from "fs/promises";
 import path from "path";
-import pify from "pify";
 import findFiles from "./utils/find-files.js";
 import JSON5 from "json5";
 
-const fs = pify(nativeFS);
+export type WatchDefinition = {
+  command: string;
+  patterns: Array<string>;
+  settle?: number;
+  appendFiles?: boolean;
+  appendSeparator?: string;
+  delete?: boolean;
+  add?: boolean;
+  change?: boolean;
+};
 
-async function loadWatches() {
+export type WatchFile = {
+  [target: string]: Array<WatchDefinition>;
+};
+
+export type WatchDir = {
+  wd: string;
+  data: WatchFile;
+};
+
+async function loadWatches(): Promise<Array<WatchDir>> {
   const watchFiles = await findFiles(".watch", process.cwd(), [
     "**/node_modules",
     ".git",
@@ -14,7 +31,7 @@ async function loadWatches() {
   const files = await Promise.all(
     watchFiles.map(async (file) => {
       try {
-        const data = await fs.readFile(file);
+        const data = await fs.readFile(file, "utf8");
         return { wd: path.dirname(file), data: JSON5.parse(data) };
       } catch (err) {
         console.error(`Failed to read ${file}`);
