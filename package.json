@@ -6,30 +6,28 @@
   "repository": "laat/nurture",
   "main": "lib/index.js",
   "bin": "lib/cli.js",
+  "type": "module",
   "author": {
     "name": "Sigurd Fosseng",
     "email": "sigurd@fosseng.net",
     "url": "https://github.com/laat"
   },
   "engines": {
-    "node": ">=6"
+    "node": ">=14"
   },
   "scripts": {
     "clean": "rimraf lib",
-    "build:js": "babel -s --ignore=test.js -d lib src",
-    "build:flow": "flow-copy-source src lib",
-    "build": "npm-run-all build:*",
+    "build:ts": "tsc",
     "eslint": "eslint -f tap",
-    "lint": "npm run eslint -- .",
+    "build": "npm-run-all build:*",
+    "lint": "echo no linting",
     "prepublish": "npm run build",
     "test": "npm run lint",
-    "watch": "node lib/cli.js build",
-    "flow": "flow check"
+    "watch": "node lib/cli.js build"
   },
   "lint-staged": {
     "*.{js,json,css}": [
-      "prettier --write",
-      "git add"
+      "prettier --write"
     ]
   },
   "files": [
@@ -45,37 +43,34 @@
     "watching"
   ],
   "devDependencies": {
-    "babel-cli": "6.26.0",
-    "babel-eslint": "10.1.0",
-    "babel-plugin-transform-es2015-modules-commonjs": "6.26.2",
-    "babel-plugin-transform-flow-strip-types": "6.22.0",
-    "babel-preset-stage-2": "6.24.1",
-    "eslint": "7.14.0",
-    "eslint-config-airbnb-base": "14.2.1",
-    "eslint-config-prettier": "6.15.0",
-    "eslint-plugin-import": "2.22.1",
-    "flow-bin": "0.138.0",
-    "flow-copy-source": "2.0.9",
-    "husky": "4.3.0",
-    "lint-staged": "10.5.2",
+    "@types/async": "^3.2.12",
+    "@types/debounce": "^1.2.1",
+    "@types/minimatch": "^3.0.5",
+    "@types/multipipe": "^3.0.0",
+    "@types/node": "^17.0.21",
+    "@types/sane": "^2.0.1",
+    "@typescript-eslint/eslint-plugin": "^5.15.0",
+    "@typescript-eslint/parser": "^5.15.0",
+    "eslint": "^8.11.0",
+    "husky": "7.0.4",
+    "lint-staged": "12.3.7",
     "npm-run-all": "4.1.5",
-    "prettier": "2.2.1",
+    "prettier": "2.6.0",
     "rimraf": "3.0.2",
-    "source-map-support": "0.5.19",
-    "tap-notify": "1.0.0"
+    "source-map-support": "0.5.21",
+    "typescript": "^4.6.2"
   },
   "dependencies": {
-    "async": "^3.0.0",
-    "chalk": "^4.0.0",
-    "debounce": "^1.2.0",
-    "escape-string-regexp": "^4.0.0",
-    "find-up": "^5.0.0",
-    "loud-rejection": "^2.0.0",
-    "minimatch": "^3.0.4",
+    "async": "^3.2.3",
+    "chalk": "^5.0.1",
+    "debounce": "^1.2.1",
+    "escape-string-regexp": "^5.0.0",
+    "find-up": "^6.3.0",
+    "json5": "^2.2.0",
+    "minimatch": "^5.0.1",
     "multipipe": "^4.0.0",
-    "ora": "^5.0.0",
-    "pify": "^5.0.0",
-    "sane": "^4.0.2"
+    "ora": "^6.1.0",
+    "sane": "^5.0.1"
   },
   "husky": {
     "hooks": {

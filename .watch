@@ -1,21 +1,23 @@
 {
-  "build": [{
-    "patterns": ["src/**/*.js"],
-    "command": "npm run build:js -- --only",
-    "settle": 500,
-    "appendFiles": true,
-    "appendSeparator": ","
-  }, {
-    "patterns": ["src/**/*.js"],
-    "command": "npm run build:flow"
-  }, {
-    "patterns": ["src/**/*"],
-    "command": "npm run clean && npm run build",
-    "change": false, "add": false, "delete": true
-  }],
-  "lint": [{
-    "patterns": ["src/**/*.js", ".eslintrc"],
-    "command": "npm run eslint --",
-    "appendFiles": true
-  }]
+  "build": [
+    {
+      "patterns": ["src/**/*.{js,ts}"],
+      "command": "npm run build:ts",
+      "settle": 500
+    },
+    {
+      "patterns": ["src/**/*"],
+      "command": "npm run clean && npm run build",
+      "change": false,
+      "add": false,
+      "delete": true
+    }
+  ],
+  "lint": [
+    {
+      "patterns": ["src/**/*.ts", ".eslintrc"],
+      "command": "npm run eslint --",
+      "appendFiles": true
+    }
+  ]
 }

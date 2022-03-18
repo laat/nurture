@@ -1,39 +1,35 @@
-// @flow
-import pify from "pify";
-import nativeFs from "fs";
-import path from "path";
-import minimatch from "minimatch";
 import reEscape from "escape-string-regexp";
+import fs from "fs/promises";
+import minimatch from "minimatch";
+import path from "path";
 
-const fs = pify(nativeFs);
-
-const isIgnored = (workdir, patterns) => {
+const isIgnored = (workdir: string, patterns: string[]) => {
   const re = new RegExp(`^${reEscape(workdir)}`);
-  return async file =>
-    (await patterns).some(pattern => minimatch(file.replace(re, ""), pattern));
+  return (file: string): boolean =>
+    patterns.some((pattern) => minimatch(file.replace(re, ""), pattern));
 };
 
 async function findFiles(
   filename: string,
   workdir: string,
-  ignore: Array<string> = []
-): Promise<Array<string>> {
-  const files = [];
+  ignore: string[] = []
+): Promise<string[]> {
+  const files: string[] = [];
   const shouldSkip = isIgnored(workdir, ignore);
-  async function walk(dir) {
+  async function walk(dir: string) {
     try {
       const stats = await fs.stat(dir);
       if (stats.isFile() && path.basename(dir) === filename) {
         files.push(dir);
       } else if (stats.isDirectory()) {
-        const visit = !await shouldSkip(dir);
+        const visit = !(await shouldSkip(dir));
         if (visit) {
           const dirs = await fs.readdir(dir);
-          await Promise.all(dirs.map(child => walk(path.join(dir, child))));
+          await Promise.all(dirs.map((child) => walk(path.join(dir, child))));
         }
       }
     } catch (e) {
-      // TODO: What now?
+      // ignore
     }
   }
   await walk(workdir);
