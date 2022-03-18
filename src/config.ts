@@ -21,11 +21,7 @@ export type WatchConfig = {
 };
 
 const getConfig = async (): Promise<WatchConfig> => {
-  const configFile = await findUp([
-    ".nurture.js",
-    ".nurture.json",
-    ".nurture.cjs",
-  ]);
+  const configFile = await findUp([".nurture.js", ".nurture.cjs"]);
   if (!configFile) {
     return {};
   }
