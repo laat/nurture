@@ -13,7 +13,7 @@
     "url": "https://github.com/laat"
   },
   "engines": {
-    "node": ">=6"
+    "node": ">=14"
   },
   "scripts": {
     "clean": "rimraf lib",
