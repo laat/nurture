@@ -1,11 +1,9 @@
 //
-/* eslint-disable no-console */
 import chalk from "chalk";
-import createWatcher from "./watch";
-import loadWatches from "./load-watches";
-import hasWatchman from "./utils/has-watchman";
-
-import getConfig from "./config";
+import createWatcher from "./watch.js";
+import loadWatches from "./load-watches.js";
+import hasWatchman from "./utils/has-watchman.js";
+import getConfig from "./config.js";
 
 const getTargets = (definitions) => {
   const targets = {};

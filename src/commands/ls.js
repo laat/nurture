@@ -1,7 +1,7 @@
 //
 /* eslint-disable no-console */
 import chalk from "chalk";
-import { listTargets } from "..";
+import { listTargets } from "../index.js";
 
 const ls = async () => {
   console.log(`Uasage:

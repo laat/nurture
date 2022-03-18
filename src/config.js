@@ -1,5 +1,4 @@
-//
-import findUp from "find-up";
+import { findUp } from "find-up";
 import multipipe from "multipipe";
 import fs from "fs";
 

@@ -1,9 +1,7 @@
-//
-/* eslint-disable no-console */
 import nativeFS from "fs";
 import path from "path";
 import pify from "pify";
-import findFiles from "./utils/find-files";
+import findFiles from "./utils/find-files.js";
 
 const fs = pify(nativeFS);
 

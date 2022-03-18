@@ -1,4 +1,3 @@
-//
 import pify from "pify";
 import nativeFs from "fs";
 import path from "path";
