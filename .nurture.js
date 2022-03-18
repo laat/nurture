@@ -1,5 +1,5 @@
 module.exports = {
   lint: {
-    stdout: [require("tap-notify")]
-  }
+    stdout: [],
+  },
 };

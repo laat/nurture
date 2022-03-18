@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// @flow
+//
 /* eslint-disable global-require, import/newline-after-import */
 import "loud-rejection/register";
 import setupWatches from ".";

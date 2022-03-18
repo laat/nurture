@@ -1,16 +1,13 @@
-// @flow
+//
 /* eslint-disable no-console */
 import chalk from "chalk";
 import createWatcher from "./watch";
 import loadWatches from "./load-watches";
 import hasWatchman from "./utils/has-watchman";
-import type { WatchDefinition } from "./load-watches";
+
 import getConfig from "./config";
 
-type Targets = {
-  [target: string]: Array<{ wd: string, data: Array<WatchDefinition> }>,
-};
-const getTargets = (definitions): Targets => {
+const getTargets = (definitions) => {
   const targets = {};
   definitions.forEach((def) => {
     Object.keys(def.data).forEach((target) => {
@@ -31,7 +28,7 @@ const setupPhaseWatch = (definitions, watcher, config) => (phase) => {
   });
 };
 
-const setupWatches = async (phase: string | Array<string>) => {
+const setupWatches = async (phase) => {
   let phases;
   if (typeof phase === "string") {
     phases = [phase];
@@ -62,7 +59,7 @@ const setupWatches = async (phase: string | Array<string>) => {
   watcher.start();
 };
 
-export const listTargets = async (): Promise<Targets> => {
+export const listTargets = async () => {
   const definitions = await loadWatches();
   return getTargets(definitions);
 };

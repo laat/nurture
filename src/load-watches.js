@@ -1,4 +1,4 @@
-// @flow
+//
 /* eslint-disable no-console */
 import nativeFS from "fs";
 import path from "path";
@@ -7,22 +7,7 @@ import findFiles from "./utils/find-files";
 
 const fs = pify(nativeFS);
 
-export type WatchDefinition = {
-  command: string,
-  patterns: Array<string>,
-  settle?: number,
-  appendFiles?: boolean,
-  appendSeparator?: string,
-  delete?: boolean,
-  add?: boolean,
-  change?: boolean,
-};
-
-export type WatchFile = {
-  [target: string]: Array<WatchDefinition>,
-};
-
-async function loadWatches(): Promise<Array<{ wd: string, data: WatchFile }>> {
+async function loadWatches() {
   const watchFiles = await findFiles(".watch", process.cwd(), [
     "**/node_modules",
     ".git",

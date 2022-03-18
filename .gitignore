@@ -1,4 +1,5 @@
 /lib
+package-lock.json
 
 ### Node ###
 # Logs
@@ -35,4 +36,3 @@ jspm_packages
 
 # Optional REPL history
 .node_repl_history
-

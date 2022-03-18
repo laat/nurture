@@ -1,17 +1,9 @@
-// @flow
+//
 import findUp from "find-up";
 import multipipe from "multipipe";
 import fs from "fs";
 
-export type PhaseConfig = {
-  stdout?: Function,
-  stderr?: Function,
-};
-export type Config = {
-  [key: string]: PhaseConfig,
-};
-
-const getConfig = async (): Config => {
+const getConfig = async () => {
   const configFile = await findUp(".nurture.js");
   if (!configFile) {
     return {};

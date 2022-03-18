@@ -1,17 +1,16 @@
-// @flow
+//
 /* eslint-disable no-console */
 import sane from "sane";
 import debounce from "debounce";
 import chalk from "chalk";
 import ora from "ora";
 import { queue } from "async";
-import type { PhaseConfig } from "./config";
-import type { WatchDefinition } from "./load-watches";
+
 import execCommand from "./utils/exec";
 
 const SETTLE_DEFAULT = 200;
 
-const check = (bool?: boolean) => (bool ? chalk.green("✓") : chalk.red("✗"));
+const check = (bool) => (bool ? chalk.green("✓") : chalk.red("✗"));
 
 const printDefinition = (
   wd,
@@ -24,7 +23,7 @@ const printDefinition = (
     settle,
     appendFiles,
     appendSeparator,
-  }: WatchDefinition
+  }
 ) => {
   let warning = "";
   if (change === false && del === false && add === false) {
@@ -57,12 +56,7 @@ const printDefinition = (
   )} ${optionsText} ${warning}`);
 };
 
-type FilesConfig = {
-  files: Array<string>,
-  appendFiles: boolean,
-  appendSeparator: string,
-};
-async function exec(wd, command, config, filesConfig: FilesConfig) {
+async function exec(wd, command, config, filesConfig) {
   if (filesConfig.files.length === 0) {
     return;
   }
@@ -83,12 +77,7 @@ async function exec(wd, command, config, filesConfig: FilesConfig) {
   await execCommand(commandToRun, options, config);
 }
 
-export default (
-  watchman: boolean
-): ({
-  add: (wd: string, config?: PhaseConfig) => (def: WatchDefinition) => void,
-  start: () => void,
-}) => {
+export default (watchman) => {
   const spinner = ora("Watching for changes");
   const startSpinner = () => {
     spinner.start();
@@ -104,62 +93,64 @@ export default (
   }, 1);
   taskQueue.drain = startSpinner;
 
-  const addDefinition = (wd: string, config: PhaseConfig = {}) => ({
-    patterns,
-    command,
-    appendFiles = false,
-    appendSeparator = " ",
-    add = true,
-    delete: del = false,
-    change = true,
-    settle = SETTLE_DEFAULT,
-  }: WatchDefinition) => {
-    const watchDefinition = {
+  const addDefinition =
+    (wd, config = {}) =>
+    ({
       patterns,
       command,
-      settle,
-      appendFiles,
-      appendSeparator,
-      add,
-      delete: del,
-      change,
+      appendFiles = false,
+      appendSeparator = " ",
+      add = true,
+      delete: del = false,
+      change = true,
+      settle = SETTLE_DEFAULT,
+    }) => {
+      const watchDefinition = {
+        patterns,
+        command,
+        settle,
+        appendFiles,
+        appendSeparator,
+        add,
+        delete: del,
+        change,
+      };
+
+      printDefinition(wd, watchDefinition);
+
+      const watcher = sane(wd, { glob: patterns, watchman });
+      const newChanges = new Set();
+
+      const processChanges = debounce(() => {
+        taskQueue.push(async () => {
+          spinner.stop();
+          const files = Array.from(newChanges);
+          newChanges.clear();
+          const filesConfig = {
+            files,
+            appendFiles,
+            appendSeparator,
+          };
+
+          await exec(wd, command, config, filesConfig);
+        });
+      }, settle);
+
+      const newChange = (file) => {
+        newChanges.add(file);
+        processChanges();
+      };
+
+      if (change) {
+        watcher.on("change", newChange);
+      }
+      if (add) {
+        watcher.on("add", newChange);
+      }
+      if (del) {
+        watcher.on("delete", newChange);
+      }
     };
-
-    printDefinition(wd, watchDefinition);
-
-    const watcher = sane(wd, { glob: patterns, watchman });
-    const newChanges = new Set();
-
-    const processChanges = debounce(() => {
-      taskQueue.push(async () => {
-        spinner.stop();
-        const files = Array.from(newChanges);
-        newChanges.clear();
-        const filesConfig = {
-          files,
-          appendFiles,
-          appendSeparator,
-        };
-
-        await exec(wd, command, config, filesConfig);
-      });
-    }, settle);
-
-    const newChange = (file) => {
-      newChanges.add(file);
-      processChanges();
-    };
-
-    if (change) {
-      watcher.on("change", newChange);
-    }
-    if (add) {
-      watcher.on("add", newChange);
-    }
-    if (del) {
-      watcher.on("delete", newChange);
-    }
-  };
 
   return {
     add: addDefinition,

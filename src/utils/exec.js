@@ -1,14 +1,9 @@
-// @flow
+//
 /* eslint-disable no-console */
 import { spawn } from "child_process";
 import chalk from "chalk";
-import type { PhaseConfig } from "../config";
 
-export default function exec(
-  command: string,
-  options: Object,
-  config: PhaseConfig
-): Promise<void> {
+export default function exec(command, options, config) {
   return new Promise((resolve, reject) => {
     const stdio = [
       "inherit",
