@@ -2,6 +2,7 @@ import nativeFS from "fs";
 import path from "path";
 import pify from "pify";
 import findFiles from "./utils/find-files.js";
+import JSON5 from "json5";
 
 const fs = pify(nativeFS);
 
@@ -14,7 +15,7 @@ async function loadWatches() {
     watchFiles.map(async (file) => {
       try {
         const data = await fs.readFile(file);
-        return { wd: path.dirname(file), data: JSON.parse(data) };
+        return { wd: path.dirname(file), data: JSON5.parse(data) };
       } catch (err) {
         console.error(`Failed to read ${file}`);
         throw err;

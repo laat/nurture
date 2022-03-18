@@ -7,7 +7,8 @@ const getConfig = async () => {
   if (!configFile) {
     return {};
   }
-  const config = JSON.parse(fs.readFileSync(configFile, "utf8"));
+  const config = await import(configFile);
+  //
 
   Object.keys(config)
     .map((phase) => config[phase])

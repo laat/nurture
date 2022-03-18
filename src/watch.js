@@ -89,64 +89,66 @@ export default (watchman) => {
         cb();
       });
   }, 1);
-  taskQueue.drain = startSpinner;
+  taskQueue.drain(startSpinner);
 
-  const addDefinition = (wd, config = {}) => ({
-    patterns,
-    command,
-    appendFiles = false,
-    appendSeparator = " ",
-    add = true,
-    delete: del = false,
-    change = true,
-    settle = SETTLE_DEFAULT,
-  }) => {
-    const watchDefinition = {
+  const addDefinition =
+    (wd, config = {}) =>
+    ({
       patterns,
       command,
-      settle,
-      appendFiles,
-      appendSeparator,
-      add,
-      delete: del,
-      change,
+      appendFiles = false,
+      appendSeparator = " ",
+      add = true,
+      delete: del = false,
+      change = true,
+      settle = SETTLE_DEFAULT,
+    }) => {
+      const watchDefinition = {
+        patterns,
+        command,
+        settle,
+        appendFiles,
+        appendSeparator,
+        add,
+        delete: del,
+        change,
+      };
+
+      printDefinition(wd, watchDefinition);
+
+      const watcher = sane(wd, { glob: patterns, watchman });
+      const newChanges = new Set();
+
+      const processChanges = debounce(() => {
+        taskQueue.push(async () => {
+          spinner.stop();
+          const files = Array.from(newChanges);
+          newChanges.clear();
+          const filesConfig = {
+            files,
+            appendFiles,
+            appendSeparator,
+          };
+
+          await exec(wd, command, config, filesConfig);
+        });
+      }, settle);
+
+      const newChange = (file) => {
+        newChanges.add(file);
+        processChanges();
+      };
+
+      if (change) {
+        watcher.on("change", newChange);
+      }
+      if (add) {
+        watcher.on("add", newChange);
+      }
+      if (del) {
+        watcher.on("delete", newChange);
+      }
     };
-
-    printDefinition(wd, watchDefinition);
-
-    const watcher = sane(wd, { glob: patterns, watchman });
-    const newChanges = new Set();
-
-    const processChanges = debounce(() => {
-      taskQueue.push(async () => {
-        spinner.stop();
-        const files = Array.from(newChanges);
-        newChanges.clear();
-        const filesConfig = {
-          files,
-          appendFiles,
-          appendSeparator,
-        };
-
-        await exec(wd, command, config, filesConfig);
-      });
-    }, settle);
-
-    const newChange = (file) => {
-      newChanges.add(file);
-      processChanges();
-    };
-
-    if (change) {
-      watcher.on("change", newChange);
-    }
-    if (add) {
-      watcher.on("add", newChange);
-    }
-    if (del) {
-      watcher.on("delete", newChange);
-    }
-  };
 
   return {
     add: addDefinition,
