@@ -13,7 +13,7 @@ export default function exec(
     const stdio = [
       "inherit",
       config.stdout ? "pipe" : "inherit",
-      config.stderr ? "pipe" : "inherit"
+      config.stderr ? "pipe" : "inherit",
     ];
     const child = spawn(command, { ...options, stdio });
     let stdout;
@@ -26,7 +26,7 @@ export default function exec(
       stderr = config.stderr();
       child.stderr.pipe(stderr).pipe(process.stderr);
     }
-    child.on("exit", code => {
+    child.on("exit", (code) => {
       if (code !== 0) {
         console.log(`
 > ${chalk.red("ERROR")} [${options.cwd}]

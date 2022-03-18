@@ -8,12 +8,12 @@ import type { WatchDefinition } from "./load-watches";
 import getConfig from "./config";
 
 type Targets = {
-  [target: string]: Array<{ wd: string, data: Array<WatchDefinition> }>
+  [target: string]: Array<{ wd: string, data: Array<WatchDefinition> }>,
 };
 const getTargets = (definitions): Targets => {
   const targets = {};
-  definitions.forEach(def => {
-    Object.keys(def.data).forEach(target => {
+  definitions.forEach((def) => {
+    Object.keys(def.data).forEach((target) => {
       targets[target] = targets[target] || [];
       targets[target].push({ wd: def.wd, data: def.data[target] });
     });
@@ -21,7 +21,7 @@ const getTargets = (definitions): Targets => {
   return targets;
 };
 
-const setupPhaseWatch = (definitions, watcher, config) => phase => {
+const setupPhaseWatch = (definitions, watcher, config) => (phase) => {
   definitions.forEach(({ wd, data: phaseData }) => {
     if (!phaseData[phase]) {
       return;
@@ -41,7 +41,7 @@ const setupWatches = async (phase: string | Array<string>) => {
   const [definitions, watchman, config] = await Promise.all([
     loadWatches(),
     hasWatchman(),
-    getConfig()
+    getConfig(),
   ]);
   const watcher = createWatcher(watchman);
   const setup = setupPhaseWatch(definitions, watcher, config);
@@ -49,7 +49,7 @@ const setupWatches = async (phase: string | Array<string>) => {
   phases.forEach(setup);
 
   const targets = getTargets(definitions);
-  phases.forEach(p => {
+  phases.forEach((p) => {
     if (!Object.keys(targets).includes(p)) {
       console.error(
         `\n${chalk.yellow("WARNING")}: target ${chalk.yellow(

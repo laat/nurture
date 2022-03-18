@@ -23,7 +23,7 @@ const printDefinition = (
     patterns,
     settle,
     appendFiles,
-    appendSeparator
+    appendSeparator,
   }: WatchDefinition
 ) => {
   let warning = "";
@@ -60,7 +60,7 @@ const printDefinition = (
 type FilesConfig = {
   files: Array<string>,
   appendFiles: boolean,
-  appendSeparator: string
+  appendSeparator: string,
 };
 async function exec(wd, command, config, filesConfig: FilesConfig) {
   if (filesConfig.files.length === 0) {
@@ -83,7 +83,12 @@ async function exec(wd, command, config, filesConfig: FilesConfig) {
   await execCommand(commandToRun, options, config);
 }
 
-export default (watchman: boolean) => {
+export default (
+  watchman: boolean
+): ({
+  add: (wd: string, config?: PhaseConfig) => (def: WatchDefinition) => void,
+  start: () => void,
+}) => {
   const spinner = ora("Watching for changes");
   const startSpinner = () => {
     spinner.start();
@@ -92,7 +97,7 @@ export default (watchman: boolean) => {
   const taskQueue = queue((fn, cb) => {
     fn()
       .then(cb)
-      .catch(err => {
+      .catch((err) => {
         console.error("Task failed", err);
         cb();
       });
@@ -107,7 +112,7 @@ export default (watchman: boolean) => {
     add = true,
     delete: del = false,
     change = true,
-    settle = SETTLE_DEFAULT
+    settle = SETTLE_DEFAULT,
   }: WatchDefinition) => {
     const watchDefinition = {
       patterns,
@@ -117,7 +122,7 @@ export default (watchman: boolean) => {
       appendSeparator,
       add,
       delete: del,
-      change
+      change,
     };
 
     printDefinition(wd, watchDefinition);
@@ -133,14 +138,14 @@ export default (watchman: boolean) => {
         const filesConfig = {
           files,
           appendFiles,
-          appendSeparator
+          appendSeparator,
         };
 
         await exec(wd, command, config, filesConfig);
       });
     }, settle);
 
-    const newChange = file => {
+    const newChange = (file) => {
       newChanges.add(file);
       processChanges();
     };
@@ -158,6 +163,6 @@ export default (watchman: boolean) => {
 
   return {
     add: addDefinition,
-    start: startSpinner
+    start: startSpinner,
   };
 };

@@ -1,7 +1,7 @@
 // @flow
 import { execSync } from "child_process";
 
-export default function hasWatchman() {
+export default function hasWatchman(): boolean {
   try {
     execSync("watchman version", { silent: true, stdio: [] });
     return true;
