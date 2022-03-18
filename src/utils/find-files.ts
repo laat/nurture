@@ -28,7 +28,9 @@ async function findFiles(
           await Promise.all(dirs.map((child) => walk(path.join(dir, child))));
         }
       }
-    } catch (e) {}
+    } catch (e) {
+      // ignore
+    }
   }
   await walk(workdir);
   return files;

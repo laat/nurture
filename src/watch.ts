@@ -102,6 +102,7 @@ export default (watchman: boolean | undefined): Watcher => {
       await fn();
     } catch (err) {
       console.error("Task failed", err);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       return cb(err as any);
     }
     cb();

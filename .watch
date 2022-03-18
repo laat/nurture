@@ -4,8 +4,6 @@
       "patterns": ["src/**/*.{js,ts}"],
       "command": "npm run build:ts",
       "settle": 500
-      // "appendFiles": true,
-      // "appendSeparator": ","
     },
     {
       "patterns": ["src/**/*"],

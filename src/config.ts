@@ -21,11 +21,15 @@ export type WatchConfig = {
 };
 
 const getConfig = async (): Promise<WatchConfig> => {
-  const configFile = await findUp(".nurture.js");
+  const configFile = await findUp([
+    ".nurture.js",
+    ".nurture.json",
+    ".nurture.cjs",
+  ]);
   if (!configFile) {
     return {};
   }
-  const config: Config = await import(configFile);
+  const config: Config = (await import(configFile)).default;
 
   return Object.fromEntries(
     Object.entries(config).map(([key, phase]) => [
