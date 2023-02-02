@@ -1,6 +1,7 @@
 import { findUp } from "find-up";
 import multipipe from "multipipe";
-import { Duplex } from "stream";
+
+interface Duplex extends NodeJS.ReadableStream, NodeJS.WritableStream {}
 
 export type PhaseConfig = {
   stdout?: Array<() => Duplex>;
