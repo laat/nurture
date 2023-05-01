@@ -1,6 +1,4 @@
-# nurture [![travis][travis-image]][travis-url] [![npm][npm-image]][npm-url]
-[travis-image]: https://img.shields.io/travis/laat/nurture.svg?style=flat&branch=master
-[travis-url]: https://travis-ci.org/laat/nurture
+# nurture [![npm][npm-image]][npm-url]
 [npm-image]: https://img.shields.io/npm/v/nurture.svg?style=flat
 [npm-url]: https://npmjs.org/package/nurture
 
