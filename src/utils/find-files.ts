@@ -1,6 +1,6 @@
 import reEscape from "escape-string-regexp";
 import fs from "fs/promises";
-import minimatch from "minimatch";
+import { minimatch } from "minimatch";
 import path from "path";
 
 const isIgnored = (workdir: string, patterns: string[]) => {
